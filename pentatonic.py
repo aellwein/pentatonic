@@ -39,7 +39,7 @@ class Pentatonic:
         # print(self.penta)
 
     def render(self, c, intervals=False):
-        c.stroke(self.fretboard)
+        c.stroke(self.fretboard, [style.linewidth.Thick])
         # self._dots(c)
         self._frets_legend(c)
         self._penta_dots(c, intervals)
