@@ -116,30 +116,30 @@ class Pentatonic:
         return dict(tone=self.tones[idx], note=idx)
 
     def _penta(self):
-        # pentatonic means we get 1,2,3,5,6 from major root
-        # or 1,m3,4,5,m7 from minor root
+        # pentatonic means we get 1,2,3,5,6 from major scale
+        # or 1,b3,4,5,b7 from minor scale
         if 'minor' in self.ptype and self.ptype['minor']:
             return (
                 self.ptype,
-                self._interval(self.ptype['note'], 3),  # minor 3rd
-                self._interval(self.ptype['note'], 5),  # 4th
-                self._interval(self.ptype['note'], 7),  # 5th
-                self._interval(self.ptype['note'], 10),  # minor 7th
+                self._interval(self.ptype['note'], 3),   # flat 3
+                self._interval(self.ptype['note'], 5),   # 4
+                self._interval(self.ptype['note'], 7),   # 5
+                self._interval(self.ptype['note'], 10),  # flat 7
             )
         else:
             return (
                 self.ptype,
-                self._interval(self.ptype['note'], 2),  # major 2th
-                self._interval(self.ptype['note'], 4),  # major 3rd
-                self._interval(self.ptype['note'], 7),   # fifth
-                self._interval(self.ptype['note'], 9),  # major 6th
+                self._interval(self.ptype['note'], 2),   # 2
+                self._interval(self.ptype['note'], 4),   # 3
+                self._interval(self.ptype['note'], 7),   # 5
+                self._interval(self.ptype['note'], 9),   # 6
             )
 
     def _penta_dots(self, c, intervals=False):
         penta_notes = tuple([i['note'] for i in self.penta])
 
         def ival_by_idx(idx, minor):
-            return ('6', '1', '2', '3', '5')[idx] if minor else ('1', '2', '3', '5', '6')[idx]
+            return ('1', 'b3', '4', '5', 'b7')[idx] if minor else ('1', '2', '3', '5', '6')[idx]
 
         for fret in range(0, self.frets + 1):
             for string in range(0, 6):
@@ -155,8 +155,9 @@ class Pentatonic:
                         c.stroke(path.circle(fret_x, self.y + string *
                                              self.fret_height, self.note_rad), styles)
                         if intervals:
-                            c.text(fret_x - self.dot_rad*1.2, self.y + string *
-                                   self.fret_height - self.dot_rad, ival_by_idx(idx, self.ptype['minor']))
+                            tx = ival_by_idx(idx, self.ptype['minor'])
+                            c.text(fret_x - self.dot_rad * (1.2 * len(tx)), self.y + string *
+                                   self.fret_height - self.dot_rad, tx)
 
                     else:
                         # root note
@@ -166,8 +167,9 @@ class Pentatonic:
                         c.stroke(path.circle(fret_x, self.y + string * self.fret_height,
                                              self.note_rad), [style.linewidth.Thick, deco.filled([color.rgb.red])])
                         if intervals:
-                            c.text(fret_x - self.dot_rad*1.2, self.y + string *
-                                   self.fret_height - self.dot_rad, ival_by_idx(idx, self.ptype['minor']), [color.rgb.white])
+                            tx = ival_by_idx(idx, self.ptype['minor'])
+                            c.text(fret_x - self.dot_rad * (1.2 * len(tx)), self.y + string *
+                                   self.fret_height - self.dot_rad, tx, [color.rgb.white])
 
 
 def main():
